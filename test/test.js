@@ -31,6 +31,16 @@ describe('toType', function () {
       eq(toType({type: 'string'}), Str);
     });
 
+    it('should handle enum', function () {
+      var Type = toType({
+        type: 'string',
+        'enum': ["Street", "Avenue", "Boulevard"]
+      });
+      eq(getKind(Type), 'enums');
+      eq(Type.is('a'), false);
+      eq(Type.is('Street'), true);
+    });
+
     it('should handle minLength', function () {
       var Type = toType({
         type: 'string',
@@ -51,6 +61,32 @@ describe('toType', function () {
       eq(Type.meta.type, Str);
       eq(Type.meta.predicate('aa'), true);
       eq(Type.meta.predicate('aaa'), false);
+    });
+
+    it('should handle pattern', function () {
+      var Type = toType({
+        type: 'string',
+        pattern: '^h'
+      });
+      eq(getKind(Type), 'subtype');
+      eq(Type.meta.type, Str);
+      eq(Type.meta.predicate('hello'), true);
+      eq(Type.meta.predicate('aaa'), false);
+    });
+
+    describe('format property', function () {
+
+      it('should handle email', function () {
+        var Type = toType({
+          type: 'string',
+          format: 'email'
+        });
+        eq(getKind(Type), 'subtype');
+        eq(Type.meta.type, Str);
+        eq(Type.meta.predicate('a@b.it'), true);
+        eq(Type.meta.predicate('aaa'), false);
+      });
+
     });
 
   });
@@ -113,12 +149,35 @@ describe('toType', function () {
 
   });
 
+  it('should translate a null schema', function () {
+    var Type = toType({type: 'null'});
+    ok(Type.is(null));
+    ko(Type.is(undefined));
+    ko(Type.is('a'));
+  });
+
   it('should translate a boolean schema', function () {
     eq(toType({type: 'boolean'}), Bool);
   });
 
-  it('should translate a object schema', function () {
-    eq(toType({type: 'object'}), Obj);
+  describe('number schema', function () {
+
+    it('should translate a simple schema', function () {
+      eq(toType({type: 'object'}), Obj);
+    });
+
+    it('should translate a simple schema', function () {
+      var Type = toType({
+        type: 'object',
+        properties: {
+          a: {type: 'string'},
+          b: {type: 'number'}
+        }
+      });
+      ok(Type.meta.props.a === Str);
+      ok(Type.meta.props.b === Num);
+    });
+
   });
 
   it('should translate a array schema', function () {
