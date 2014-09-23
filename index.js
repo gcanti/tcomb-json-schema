@@ -12,6 +12,7 @@ var subtype = t.subtype;
 var enums = t.enums;
 var union = t.union;
 var struct = t.struct;
+var maybe = t.maybe;
 
 var Type = enums.of('null string number boolean object array', 'sType');
 
@@ -76,10 +77,17 @@ var types = {
   object: function (s) {
     var props = {};
     var hasProperties = false;
+    var required = {};
+    if (s.required) {
+      s.required.forEach(function (k) {
+        required[k] = true;
+      });
+    }
     for (var k in s.properties) {
       if (s.properties.hasOwnProperty(k)) {
         hasProperties = true;
-        props[k] = toType(s.properties[k]);
+        var type = toType(s.properties[k]);
+        props[k] = required[k] ? type : maybe(type);
       }
     }
     return hasProperties ? struct(props, s.description) : Obj;

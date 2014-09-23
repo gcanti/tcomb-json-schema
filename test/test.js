@@ -160,13 +160,13 @@ describe('toType', function () {
     eq(toType({type: 'boolean'}), Bool);
   });
 
-  describe('number schema', function () {
+  describe('object schema', function () {
 
     it('should translate a simple schema', function () {
       eq(toType({type: 'object'}), Obj);
     });
 
-    it('should translate a simple schema', function () {
+    it('should handle optional properties', function () {
       var Type = toType({
         type: 'object',
         properties: {
@@ -174,8 +174,29 @@ describe('toType', function () {
           b: {type: 'number'}
         }
       });
-      ok(Type.meta.props.a === Str);
-      ok(Type.meta.props.b === Num);
+      var a = Type.meta.props.a;
+      var b = Type.meta.props.b;
+      eq(getKind(a), 'maybe');
+      ok(a.meta.type === Str);
+      eq(getKind(b), 'maybe');
+      ok(b.meta.type === Num);
+    });
+
+    it('should handle required properties', function () {
+      var Type = toType({
+        type: 'object',
+        properties: {
+          a: {type: 'string'},
+          b: {type: 'number'}
+        },
+        required: ['a']
+      });
+      var a = Type.meta.props.a;
+      var b = Type.meta.props.b;
+      eq(getKind(a), 'irriducible');
+      ok(a === Str);
+      eq(getKind(b), 'maybe');
+      ok(b.meta.type === Num);
     });
 
   });
@@ -184,7 +205,7 @@ describe('toType', function () {
     eq(toType({type: 'array'}), Arr);
   });
 
-  it('should translate a [string, number] schema', function () {
+  it('should handle unions', function () {
     var Type = toType({type: ["number", "string"]});
     eq(getKind(Type), 'union');
     ok(Type.meta.types[0] === Num);
