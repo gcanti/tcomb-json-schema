@@ -4,6 +4,7 @@
   "description": "Converts a JSON Schema to tcomb types",
   "main": "index.js",
   "scripts": {
+    "playground": "watchify playground/playground.src.js -o playground/playground.js -v"
   },
   "repository": {
     "type": "git",
@@ -17,7 +18,11 @@
   "homepage": "https://github.com/gcanti/json-schema-to-tcomb",
   "dependencies": {
     "tcomb": "~0.2.1",
-    "fcomb": "~0.0.1"
+    "fcomb": "~0.0.2"
+  },
+  "devDependencies": {
+    "react": "~0.11.2",
+    "tcomb-form": "~0.1.1"
   },
   "tags": [ 
     "tcomb",

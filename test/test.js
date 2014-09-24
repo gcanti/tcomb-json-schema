@@ -147,6 +147,17 @@ describe('toType', function () {
       eq(Type.meta.predicate(3), false);
     });
 
+    it('should handle integer', function () {
+      var Type = toType({
+        type: 'number',
+        integer: true
+      });
+      eq(getKind(Type), 'subtype');
+      eq(Type.meta.type, Num);
+      eq(Type.meta.predicate(1), true);
+      eq(Type.meta.predicate(1.1), false);
+    });
+
   });
 
   it('should translate a null schema', function () {
@@ -201,8 +212,36 @@ describe('toType', function () {
 
   });
 
-  it('should translate a array schema', function () {
-    eq(toType({type: 'array'}), Arr);
+  describe('array schema', function () {
+
+    it('should translate a simple schema', function () {
+      eq(toType({type: 'array'}), Arr);
+    });
+
+    it('should handle items as list', function () {
+      var Type = toType({
+        type: 'array',
+        items: {
+          type: 'number'
+        }
+      });
+      eq(getKind(Type), 'list');
+      ok(Type.meta.type === Num);
+    });
+
+    it('should handle items as tuple', function () {
+      var Type = toType({
+        type: 'array',
+        items: [
+          {type: 'string'},
+          {type: 'number'}
+        ]
+      });
+      eq(getKind(Type), 'tuple');
+      ok(Type.meta.types[0] === Str);
+      ok(Type.meta.types[1] === Num);
+    });
+
   });
 
   it('should handle unions', function () {

@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>json-schema-to-tcomb playground</title>
+    
+    <link type="text/css" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/zepto/1.1.4/zepto.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/4.5.0/codemirror.min.css"/>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/4.5.0/codemirror.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/4.5.0/mode/javascript/javascript.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="style.css"/>
+    <script type="text/javascript" src="playground.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="row header">
+        <div class="col-md-6">
+          <h1>JSON Schema forms</h1>
+          <p class="lead">Automatically generate form markup from a JSON Schema.</p>
+          <p>
+            This demo uses 
+            <a href="https://github.com/gcanti/json-schema-to-tcomb">json-schema-to-tcomb</a>
+            to convert a JSON Schema to 
+            <a href="https://github.com/gcanti/tcomb">tcomb</a>
+            and then to a form
+            with 
+            <a href="https://github.com/gcanti/tcomb-form">tcomb-form</a>.
+          </p>
+        </div>
+        <div class="col-md-6">
+          <div class="repo-link">
+            <p><b>Benefits</b></p>
+            <ul>
+              <li>Write a lot less HTML</li>
+              <li>Usability and accessibility for free (automatic labels, inline validation, etc)</li>
+              <li>No need to update forms when schema changes</li>
+            </ul>
+            <p class="text-right"><span>My other </span><a href="/">projects</a></p>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <h3>Source</h3>
+          <p class="text-muted">Live code editor. Changes will be reflected in the preview.</p>
+          <div>
+            <div class="form-group">
+              <p><b>Examples</b></p>
+              <div id="examples" class="form-group"></div>
+            </div>
+            <div class="form-group">
+              <textarea id="code" class="form-control" type="textarea"></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div id="formValues"></div>
+          <h3>Preview</h3>
+          <div id="preview"></div>
+        </div>
+      </div>
+    </div>
+<script type="text/example" id="required">{
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "surname": {
+      "type": "string"
+    }
+  },
+  "required": ["name", "surname"]
+}
+</script>
+<script type="text/example" id="optional">{
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "surname": {
+      "type": "string"
+    }
+  }
+}
+</script>
+<script type="text/example" id="enums">{
+  "type": "object",
+  "properties": {
+    "number":      { "type": "number" },
+    "street_name": { "type": "string" },
+    "street_type": { 
+      "type": "string",
+      "enum": ["Street", "Avenue", "Boulevard"]
+    }
+  }
+}
+</script>
+<script type="text/example" id="subtypes">{
+  "type": "object",
+  "properties": {
+    "username": {
+      "type": "string" 
+    },
+    "password": { 
+      "type": "string",
+      "minLength": 6
+    }
+  },
+  "required": ["username", "password"]
+}
+</script>
+<script type="text/example" id="list">{
+  "type": "array",
+  "items": {
+    "type": "string"
+  }
+}
+</script>
+<script type="text/example" id="listOfIntegers">{
+  "type": "array",
+  "items": {
+    "type": "number",
+    "integer": true
+  }
+}
+</script>
+<script type="text/example" id="listOfObjects">{
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "type": "string"
+      },
+      "surname": {
+        "type": "string"
+      }
+    },
+    "required": ["name", "surname"]
+  }
+}
+</script>
+<script type="text/example" id="nested">{
+  "type": "object",
+  "description": "A family",
+  "properties": {
+    "mother": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "surname": { "type": "string" }
+      },
+      "required": ["name", "surname"]
+    },
+    "father": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "surname": { "type": "string" }
+      },
+      "required": ["name", "surname"]
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "surname": { "type": "string" }
+        },
+        "required": ["name", "surname"]
+      }
+    }
+  },
+  "required": ["mother", "father", "children"]
+}
+</script>
+
+    <a href="https://github.com/gcanti/json-schema-to-tcomb"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/652c5b9acfaddf3a9c326fa6bde407b87f7be0f4/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6f72616e67655f6666373630302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png"></a>
+
+    
+  </body>
+</html>
+
