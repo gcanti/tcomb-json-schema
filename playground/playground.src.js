@@ -57,7 +57,7 @@ $(function () {
 
   function renderFormValues(value) {
     var html = '<h3>Form values</h3>';
-    html += 'This is an instance of the type. Open up the console to see the details.<br/><br/>';
+    //html += 'This is an instance of the type. Open up the console to see the details.<br/><br/>';
     html += '<div class="alert alert-success"><pre>' + JSON.stringify(value, null, 2) + '</pre></div>';
     $formValues.show().html(html);
   }
@@ -74,7 +74,7 @@ $(function () {
         evt.preventDefault();
         var value = this.refs.form.getValue();
         if (value) {
-          console.log(value); 
+          //console.log(value); 
           renderFormValues(value);
         }
       },

@@ -74,21 +74,6 @@ describe('toType', function () {
       eq(Type.meta.predicate('aaa'), false);
     });
 
-    describe('format property', function () {
-
-      it('should handle email', function () {
-        var Type = toType({
-          type: 'string',
-          format: 'email'
-        });
-        eq(getKind(Type), 'subtype');
-        eq(Type.meta.type, Str);
-        eq(Type.meta.predicate('a@b.it'), true);
-        eq(Type.meta.predicate('aaa'), false);
-      });
-
-    });
-
   });
 
   describe('number schema', function () {
@@ -216,6 +201,22 @@ describe('toType', function () {
 
     it('should translate a simple schema', function () {
       eq(toType({type: 'array'}), Arr);
+    });
+
+    it('should handle minItems', function () {
+      var Type = toType({type: 'array', minItems: 1});
+      eq(getKind(Type), 'subtype');
+      eq(Type.meta.type, Arr);
+      eq(Type.meta.predicate([]), false);
+      eq(Type.meta.predicate(['a']), true);
+    });
+
+    it('should handle maxItems', function () {
+      var Type = toType({type: 'array', maxItems: 2});
+      eq(getKind(Type), 'subtype');
+      eq(Type.meta.type, Arr);
+      eq(Type.meta.predicate(['a', 'b']), true);
+      eq(Type.meta.predicate(['a', 'b', 'c']), false);
     });
 
     it('should handle items as list', function () {
