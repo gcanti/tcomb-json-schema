@@ -5,6 +5,7 @@ var fcomb = require('fcomb');
 var assert = t.assert;
 var Str = t.Str;
 var Num = t.Num;
+var Bool = t.Bool;
 var Obj = t.Obj;
 var Arr = t.Arr;
 var subtype = t.subtype;
@@ -58,7 +59,7 @@ var types = {
   },
 
   boolean: function (s) {
-    return t.Bool;
+    return Bool;
   },
 
   object: function (s) {
@@ -74,7 +75,7 @@ var types = {
       if (s.properties.hasOwnProperty(k)) {
         hasProperties = true;
         var type = toType(s.properties[k]);
-        props[k] = required[k] ? type : t.maybe(type);
+        props[k] = required[k] || type === Bool ? type : t.maybe(type);
       }
     }
     return hasProperties ? t.struct(props, s.description) : Obj;
@@ -21071,11 +21072,13 @@ $(function () {
     {id: 'required', label: '1. Required fields'},
     {id: 'optional', label: '2. Optional fields'},
     {id: 'enums', label: '3. Enums'},
-    {id: 'subtypes', label: '4. String minLength'},
-    {id: 'list', label: '5. List of strings'},
-    {id: 'listOfIntegers', label: '6. List of integers'},
-    {id: 'listOfObjects', label: '7. List of objects'},
-    {id: 'nested', label: '8. Nested structures'}
+    {id: 'strings', label: '4. Strings'},
+    {id: 'numbers', label: '5. Numbers'},
+    {id: 'booleans', label: '6. Booleans'},
+    {id: 'list', label: '7. List of strings'},
+    {id: 'listOfIntegers', label: '8. List of integers'},
+    {id: 'listOfObjects', label: '9. List of objects'},
+    {id: 'nested', label: '10. Nested structures'}
   ];
 
   var examples = {};
@@ -21138,11 +21141,12 @@ $(function () {
   }
 
   function run() {
+    var getKind = t.util.getKind;
     var json = cm.getValue();
     try {
       var schema = JSON.parse(json);
       var type = toType(schema);
-      var kind = t.util.getKind(type);
+      var kind = getKind(type);
       t.assert(kind === 'struct' || kind === 'list', 'Only object and list schemas are allowed');
       var create = kind === 'struct' ? t.form.createForm : t.form.createList;
       var opts = {
@@ -21151,7 +21155,7 @@ $(function () {
             return type === Num ? String(x || '') : x;
           },
           parse: function (value, type) {
-            return type === Num ? parseFloat(value) : value;
+            return type === Num || (getKind(type) === 'subtype' && type.meta.type === Num) ? parseFloat(value) : value;
           }
         }
       };

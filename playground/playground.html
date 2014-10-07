@@ -100,7 +100,7 @@
   }
 }
 </script>
-<script type="text/example" id="subtypes">{
+<script type="text/example" id="strings">{
   "type": "object",
   "properties": {
     "username": {
@@ -108,10 +108,39 @@
     },
     "password": { 
       "type": "string",
-      "minLength": 6
+      "minLength": 6,
+      "maxLength": 10
     }
   },
   "required": ["username", "password"]
+}
+</script>
+<script type="text/example" id="numbers">{
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string" 
+    },
+    "age": { 
+      "type": "number",
+      "minimum": 0,
+      "maximum": 200
+    }
+  },
+  "required": ["name", "age"]
+}
+</script>
+<script type="text/example" id="booleans">{
+  "type": "object",
+  "properties": {
+    "username": {
+      "type": "string" 
+    },
+    "rememberMe": { 
+      "type": "boolean"
+    }
+  },
+  "required": ["username"]
 }
 </script>
 <script type="text/example" id="list">{

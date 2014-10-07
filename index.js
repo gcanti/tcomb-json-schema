@@ -4,6 +4,7 @@ var fcomb = require('fcomb');
 var assert = t.assert;
 var Str = t.Str;
 var Num = t.Num;
+var Bool = t.Bool;
 var Obj = t.Obj;
 var Arr = t.Arr;
 var subtype = t.subtype;
@@ -57,7 +58,7 @@ var types = {
   },
 
   boolean: function (s) {
-    return t.Bool;
+    return Bool;
   },
 
   object: function (s) {
@@ -73,7 +74,7 @@ var types = {
       if (s.properties.hasOwnProperty(k)) {
         hasProperties = true;
         var type = toType(s.properties[k]);
-        props[k] = required[k] ? type : t.maybe(type);
+        props[k] = required[k] || type === Bool ? type : t.maybe(type);
       }
     }
     return hasProperties ? t.struct(props, s.description) : Obj;
