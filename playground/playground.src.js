@@ -5,6 +5,7 @@ $(function () {
   var toType = require('../index');
 
   var Num = t.Num;
+  var getKind = t.util.getKind;
 
   //
   // setup
@@ -91,8 +92,15 @@ $(function () {
     });
   }
 
+  function extractType(type) {
+    var kind = getKind(type);
+    if (kind in {subtype: true, maybe: true}) {
+      return extractType(type.meta.type);
+    }
+    return type;
+  }
+
   function run() {
-    var getKind = t.util.getKind;
     var json = cm.getValue();
     try {
       var schema = JSON.parse(json);
@@ -106,7 +114,7 @@ $(function () {
             return type === Num ? String(x || '') : x;
           },
           parse: function (value, type) {
-            return type === Num || (getKind(type) === 'subtype' && type.meta.type === Num) ? parseFloat(value) : value;
+            return extractType(type) === Num ? parseFloat(value) : value;
           }
         }
       };
