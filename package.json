@@ -1,5 +1,5 @@
 {
-  "name": "json-schema-to-tcomb",
+  "name": "tcomb-json-schema",
   "version": "0.1.0",
   "description": "Converts a JSON Schema to tcomb types",
   "main": "index.js",
@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/gcanti/json-schema-to-tcomb.git"
+    "url": "https://github.com/gcanti/tcomb-json-schema.git"
   },
   "author": "Giulio Canti <giulio.canti@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/gcanti/json-schema-to-tcomb/issues"
+    "url": "https://github.com/gcanti/tcomb-json-schema/issues"
   },
-  "homepage": "https://github.com/gcanti/json-schema-to-tcomb",
+  "homepage": "https://github.com/gcanti/tcomb-json-schema",
   "dependencies": {
     "tcomb": "^0.3.4",
     "fcomb": "^0.1.0"
