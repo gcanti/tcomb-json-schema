@@ -1,10 +1,10 @@
 {
   "name": "json-schema-to-tcomb",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Converts a JSON Schema to tcomb types",
   "main": "index.js",
   "scripts": {
-    "playground": "watchify playground/playground.src.js -o playground/playground.js -v"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -17,18 +17,16 @@
   },
   "homepage": "https://github.com/gcanti/json-schema-to-tcomb",
   "dependencies": {
-    "tcomb": "~0.2.1",
-    "fcomb": "~0.0.2"
+    "tcomb": "^0.3.4",
+    "fcomb": "^0.1.0"
   },
   "devDependencies": {
-    "react": "~0.11.2",
-    "tcomb-form": "~0.1.1"
   },
-  "tags": [ 
+  "tags": [
     "tcomb",
     "JSON Schema"
   ],
-  "keywords": [ 
+  "keywords": [
     "tcomb",
     "JSON Schema"
   ]

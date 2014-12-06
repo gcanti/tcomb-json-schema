@@ -1,7 +1,6 @@
 var t = require('tcomb');
 var fcomb = require('fcomb');
 
-var assert = t.assert;
 var Str = t.Str;
 var Num = t.Num;
 var Bool = t.Bool;
@@ -10,15 +9,15 @@ var Arr = t.Arr;
 var subtype = t.subtype;
 var enums = t.enums;
 
-var Type = enums.of('null string number boolean object array', 'Type');
+var SchemaType = enums.of('null string number boolean object array', 'SchemaType');
 
 function and(f, g) {
   return f ? fcomb.and(f, g) : g;
 }
 
-var isInteger = fcomb.util.addDoc(function isInteger(n) {
+function isInteger(n) {
   return n % 1 === 0;
-}, 'an integer number');
+}
 
 var types = {
 
@@ -107,12 +106,12 @@ var types = {
 };
 
 function toType(s) {
-  assert(Obj.is(s));
+  t.assert(Obj.is(s));
   if (!s.hasOwnProperty('type')) {
     return t.Any;
   }
   var type = s.type;
-  if (Type.is(type)) {
+  if (SchemaType.is(type)) {
     return types[s.type](s);
   } else if (Arr.is(type)) {
     return t.union(type.map(function (type) {
