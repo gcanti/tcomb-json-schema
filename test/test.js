@@ -189,7 +189,7 @@ describe('toType', function () {
       });
       var a = Type.meta.props.a;
       var b = Type.meta.props.b;
-      eq(getKind(a), 'irriducible');
+      eq(getKind(a), 'irreducible');
       ok(a === Str);
       eq(getKind(b), 'maybe');
       ok(b.meta.type === Num);

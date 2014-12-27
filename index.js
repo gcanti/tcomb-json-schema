@@ -98,7 +98,7 @@ var types = {
   },
 
   null: function () {
-    return t.irriducible('Null', function (x) {
+    return t.irreducible('Null', function (x) {
       return x === null;
     });
   }
@@ -112,8 +112,9 @@ function toType(s) {
   }
   var type = s.type;
   if (SchemaType.is(type)) {
-    return types[s.type](s);
-  } else if (Arr.is(type)) {
+    return types[type](s);
+  }
+  if (Arr.is(type)) {
     return t.union(type.map(function (type) {
       return types[type](s);
     }));
