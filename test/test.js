@@ -9,7 +9,9 @@ var Bool = t.Bool;
 var Obj = t.Obj;
 var Arr = t.Arr;
 var Any = t.Any;
-var getKind = t.util.getKind;
+var getKind = function (type) {
+  return type.meta.kind;
+};
 
 //
 // setup

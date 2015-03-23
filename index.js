@@ -1,3 +1,5 @@
+'use strict';
+
 var t = require('tcomb');
 var fcomb = require('fcomb');
 

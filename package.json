@@ -1,6 +1,6 @@
 {
   "name": "tcomb-json-schema",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Converts a JSON Schema to tcomb types",
   "main": "index.js",
   "scripts": {
@@ -16,8 +16,10 @@
     "url": "https://github.com/gcanti/tcomb-json-schema/issues"
   },
   "homepage": "https://github.com/gcanti/tcomb-json-schema",
+  "peerDependencies": {
+    "tcomb": "^1.0.0"
+  },
   "dependencies": {
-    "tcomb": "^0.4.0",
     "fcomb": "^0.1.0"
   },
   "devDependencies": {
