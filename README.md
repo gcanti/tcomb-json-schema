@@ -2,9 +2,38 @@ Converts a JSON Schema to a [tcomb](https://github.com/gcanti/tcomb) type.
 
 # API
 
-```js
-var toType = require('tcomb-json-schema');
+## toType(schema: JSONSchema): Type
 
-var TcombType = toType(myJsonSchema);
+**Example**
+
+```js
+var transform = require('tcomb-json-schema');
+
+var TcombType = transform({
+  "type": "string",
+  "enum": ["Street", "Avenue", "Boulevard"]
+});
 ```
 
+## registerFormat(format: string, predicate: (x: any) => boolean): void
+
+Registers a new format.
+
+**Example**
+
+```js
+function isEmail(x) {
+  return /(.)+@(.)+/.test(x);
+}
+
+transform.registerFormat('email', isEmail);
+
+var TcombType = transform({
+  "type": "string",
+  "format": 'email'
+});
+```
+
+## resetFormats(): void
+
+Removes all registered formats.

@@ -1,8 +1,34 @@
-v0.1.2
+# Changelog
 
-- upgrade to tcomb v1.0
-- move tcomb to peerDependencies
+> **Tags:**
+> - [New Feature]
+> - [Bug Fix]
+> - [Spec Compliancy]
+> - [Breaking Change]
+> - [Documentation]
+> - [Internal]
+> - [Polish]
 
-v0.1.1
+**Note**: Gaps between patch versions are faulty/broken releases.
 
-- upgrade to tcomb v0.4
+## v0.1.3
+
+- **New Feature**
+  + Support format property for string types #6
+- **Bug Fix**
+  + Removed `t.util.format`
+- **Internal**
+  + Optimized `Null` type
+- **Polish**
+  + Formatted CHANGELOG
+
+## v0.1.2
+
+- **Internal**
+  + Upgrade to latest `tcomb`
+  + Move `tcomb` to `peerDependencies`
+
+## v0.1.1
+
+- **Internal**
+  + Upgrade to latest `tcomb`

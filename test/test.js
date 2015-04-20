@@ -1,7 +1,7 @@
 "use strict";
 var assert = require('assert');
 var t = require('tcomb');
-var toType = require('../index');
+var transform = require('../index');
 
 var Str = t.Str;
 var Num = t.Num;
@@ -21,20 +21,20 @@ var ok = function (x) { assert.strictEqual(true, x); };
 var ko = function (x) { assert.strictEqual(false, x); };
 var eq = assert.strictEqual;
 
-describe('toType', function () {
+describe('transform', function () {
 
   it('should translate an empty schema', function () {
-    eq(toType({}), Any);
+    eq(transform({}), Any);
   });
 
   describe('string schema', function () {
 
     it('should translate a simple schema', function () {
-      eq(toType({type: 'string'}), Str);
+      eq(transform({type: 'string'}), Str);
     });
 
     it('should handle enum', function () {
-      var Type = toType({
+      var Type = transform({
         type: 'string',
         'enum': ["Street", "Avenue", "Boulevard"]
       });
@@ -44,7 +44,7 @@ describe('toType', function () {
     });
 
     it('should handle minLength', function () {
-      var Type = toType({
+      var Type = transform({
         type: 'string',
         minLength: 2
       });
@@ -55,7 +55,7 @@ describe('toType', function () {
     });
 
     it('should handle maxLength', function () {
-      var Type = toType({
+      var Type = transform({
         type: 'string',
         maxLength: 2
       });
@@ -66,7 +66,7 @@ describe('toType', function () {
     });
 
     it('should handle pattern', function () {
-      var Type = toType({
+      var Type = transform({
         type: 'string',
         pattern: '^h'
       });
@@ -81,11 +81,11 @@ describe('toType', function () {
   describe('number schema', function () {
 
     it('should translate a simple schema', function () {
-      eq(toType({type: 'number'}), Num);
+      eq(transform({type: 'number'}), Num);
     });
 
     it('should handle minimum', function () {
-      var Type = toType({
+      var Type = transform({
         type: 'number',
         minimum: 2
       });
@@ -97,7 +97,7 @@ describe('toType', function () {
     });
 
     it('should handle exclusiveMinimum', function () {
-      var Type = toType({
+      var Type = transform({
         type: 'number',
         minimum: 2,
         exclusiveMinimum: true
@@ -110,7 +110,7 @@ describe('toType', function () {
     });
 
     it('should handle maximum', function () {
-      var Type = toType({
+      var Type = transform({
         type: 'number',
         maximum: 2
       });
@@ -122,7 +122,7 @@ describe('toType', function () {
     });
 
     it('should handle exclusiveMaximum', function () {
-      var Type = toType({
+      var Type = transform({
         type: 'number',
         maximum: 2,
         exclusiveMaximum: true
@@ -135,7 +135,7 @@ describe('toType', function () {
     });
 
     it('should handle integer', function () {
-      var Type = toType({
+      var Type = transform({
         type: 'number',
         integer: true
       });
@@ -148,24 +148,24 @@ describe('toType', function () {
   });
 
   it('should translate a null schema', function () {
-    var Type = toType({type: 'null'});
+    var Type = transform({type: 'null'});
     ok(Type.is(null));
     ko(Type.is(undefined));
     ko(Type.is('a'));
   });
 
   it('should translate a boolean schema', function () {
-    eq(toType({type: 'boolean'}), Bool);
+    eq(transform({type: 'boolean'}), Bool);
   });
 
   describe('object schema', function () {
 
     it('should translate a simple schema', function () {
-      eq(toType({type: 'object'}), Obj);
+      eq(transform({type: 'object'}), Obj);
     });
 
     it('should handle optional properties', function () {
-      var Type = toType({
+      var Type = transform({
         type: 'object',
         properties: {
           a: {type: 'string'},
@@ -181,7 +181,7 @@ describe('toType', function () {
     });
 
     it('should handle required properties', function () {
-      var Type = toType({
+      var Type = transform({
         type: 'object',
         properties: {
           a: {type: 'string'},
@@ -202,11 +202,11 @@ describe('toType', function () {
   describe('array schema', function () {
 
     it('should translate a simple schema', function () {
-      eq(toType({type: 'array'}), Arr);
+      eq(transform({type: 'array'}), Arr);
     });
 
     it('should handle minItems', function () {
-      var Type = toType({type: 'array', minItems: 1});
+      var Type = transform({type: 'array', minItems: 1});
       eq(getKind(Type), 'subtype');
       eq(Type.meta.type, Arr);
       eq(Type.meta.predicate([]), false);
@@ -214,7 +214,7 @@ describe('toType', function () {
     });
 
     it('should handle maxItems', function () {
-      var Type = toType({type: 'array', maxItems: 2});
+      var Type = transform({type: 'array', maxItems: 2});
       eq(getKind(Type), 'subtype');
       eq(Type.meta.type, Arr);
       eq(Type.meta.predicate(['a', 'b']), true);
@@ -222,7 +222,7 @@ describe('toType', function () {
     });
 
     it('should handle items as list', function () {
-      var Type = toType({
+      var Type = transform({
         type: 'array',
         items: {
           type: 'number'
@@ -233,7 +233,7 @@ describe('toType', function () {
     });
 
     it('should handle items as tuple', function () {
-      var Type = toType({
+      var Type = transform({
         type: 'array',
         items: [
           {type: 'string'},
@@ -248,10 +248,61 @@ describe('toType', function () {
   });
 
   it('should handle unions', function () {
-    var Type = toType({type: ["number", "string"]});
+    var Type = transform({type: ["number", "string"]});
     eq(getKind(Type), 'union');
     ok(Type.meta.types[0] === Num);
     ok(Type.meta.types[1] === Str);
+  });
+
+  describe('registerFormat', function () {
+
+    function isEmail(x) {
+      return /(.)+@(.)+/.test(x);
+    }
+
+    transform.registerFormat('email', isEmail);
+
+    it('should throw if duplicated formats are registered', function () {
+      assert.throws(
+        function () {
+          transform.registerFormat('email', isEmail);
+        },
+        function(err) {
+          if ( (err instanceof Error) && err.message === '[tcomb-json-schema] duplicated format email') {
+            return true;
+          }
+        }
+      );
+    });
+
+    it('should throw if unknown formats are used', function () {
+      assert.throws(
+        function () {
+          var Type = transform({
+            type: "string",
+            format: 'unknown'
+          });
+        },
+        function(err) {
+          if ( (err instanceof Error) && err.message === 'missing format unknown, use the `registerFormat` API') {
+            return true;
+          }
+        }
+      );
+    });
+
+    it('should handle format property', function () {
+      var Type = transform({
+        type: "string",
+        format: 'email'
+      });
+      eq(getKind(Type), 'subtype');
+      ok(Type.meta.type === Str);
+      ok(Type.meta.predicate === isEmail);
+      ok(Type.is('a@b'));
+      ko(Type.is(''))
+    });
+
   });
 
 });

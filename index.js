@@ -40,6 +40,10 @@ var types = {
     if (s.hasOwnProperty('pattern')) {
       predicate = and(predicate, fcomb.regexp(new RegExp(s.pattern)));
     }
+    if (s.hasOwnProperty('format')) {
+      t.assert(formats.hasOwnProperty(s.format), 'missing format %s, use the `registerFormat` API', s.format);
+      predicate = and(predicate, formats[s.format]);
+    }
     return predicate ? subtype(Str, predicate) : Str;
   },
 
@@ -77,7 +81,7 @@ var types = {
     for (var k in s.properties) {
       if (s.properties.hasOwnProperty(k)) {
         hasProperties = true;
-        var type = toType(s.properties[k]);
+        var type = transform(s.properties[k]);
         props[k] = required[k] || type === Bool ? type : t.maybe(type);
       }
     }
@@ -88,9 +92,9 @@ var types = {
     if (s.hasOwnProperty('items')) {
       var items = s.items;
       if (Obj.is(items)) {
-        return t.list(toType(s.items));
+        return t.list(transform(s.items));
       }
-      return t.tuple(items.map(toType));
+      return t.tuple(items.map(transform));
     }
     var predicate;
     if (s.hasOwnProperty('minItems')) {
@@ -108,7 +112,7 @@ var types = {
 
 };
 
-function toType(s) {
+function transform(s) {
   t.assert(Obj.is(s));
   if (!s.hasOwnProperty('type')) {
     return t.Any;
@@ -125,4 +129,15 @@ function toType(s) {
   t.fail(t.format('unsupported json schema %j', s));
 }
 
-module.exports = toType;
+var formats = {};
+
+transform.registerFormat = function registerFormat(format, predicate) {
+  t.assert(!formats.hasOwnProperty(format), '[tcomb-json-schema] duplicated format %s', format);
+  formats[format] = predicate;
+};
+
+transform.resetFormats = function resetFormats() {
+  formats = {};
+};
+
+module.exports = transform;
