@@ -11,7 +11,7 @@ var Arr = t.Arr;
 var subtype = t.subtype;
 var enums = t.enums;
 
-var SchemaType = enums.of('null string number boolean object array', 'SchemaType');
+var SchemaType = enums.of('null string number integer boolean object array', 'SchemaType');
 var Null = t.irreducible('Null', function (x) {
   return x === null;
 });
@@ -61,6 +61,21 @@ var types = {
     }
     if (s.hasOwnProperty('integer') && s.integer) {
       predicate = and(predicate, isInteger);
+    }
+    return predicate ? subtype(Num, predicate) : Num;
+  },
+
+  integer: function (s) {
+    var predicate = isInteger;
+    if (s.hasOwnProperty('minimum')) {
+      predicate = s.exclusiveMinimum ?
+        and(predicate, fcomb.gt(s.minimum)) :
+        and(predicate, fcomb.gte(s.minimum));
+    }
+    if (s.hasOwnProperty('maximum')) {
+      predicate = s.exclusiveMaximum ?
+        and(predicate, fcomb.lt(s.maximum)) :
+        and(predicate, fcomb.lte(s.maximum));
     }
     return predicate ? subtype(Num, predicate) : Num;
   },

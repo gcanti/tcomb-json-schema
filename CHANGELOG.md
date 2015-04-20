@@ -15,6 +15,7 @@
 
 - **New Feature**
   + Support format property for string types #6
+  + Support integer type #5
 - **Bug Fix**
   + Removed `t.util.format`
 - **Internal**

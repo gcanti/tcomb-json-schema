@@ -23,13 +23,13 @@ var eq = assert.strictEqual;
 
 describe('transform', function () {
 
-  it('should translate an empty schema', function () {
+  it('should transform an empty schema', function () {
     eq(transform({}), Any);
   });
 
   describe('string schema', function () {
 
-    it('should translate a simple schema', function () {
+    it('should transform a simple schema', function () {
       eq(transform({type: 'string'}), Str);
     });
 
@@ -80,7 +80,7 @@ describe('transform', function () {
 
   describe('number schema', function () {
 
-    it('should translate a simple schema', function () {
+    it('should transform a simple schema', function () {
       eq(transform({type: 'number'}), Num);
     });
 
@@ -147,20 +147,84 @@ describe('transform', function () {
 
   });
 
-  it('should translate a null schema', function () {
+  describe('integer schema', function () {
+
+    it('should transform a simple schema', function () {
+      var Type = transform({
+        type: 'integer'
+      });
+      eq(getKind(Type), 'subtype');
+      eq(Type.meta.type, Num);
+      eq(Type.meta.predicate(1), true);
+      eq(Type.meta.predicate(1.1), false);
+    });
+
+    it('should handle minimum', function () {
+      var Type = transform({
+        type: 'integer',
+        minimum: 2
+      });
+      eq(getKind(Type), 'subtype');
+      eq(Type.meta.type, Num);
+      eq(Type.meta.predicate(1), false);
+      eq(Type.meta.predicate(2), true);
+      eq(Type.meta.predicate(3), true);
+    });
+
+    it('should handle exclusiveMinimum', function () {
+      var Type = transform({
+        type: 'integer',
+        minimum: 2,
+        exclusiveMinimum: true
+      });
+      eq(getKind(Type), 'subtype');
+      eq(Type.meta.type, Num);
+      eq(Type.meta.predicate(1), false);
+      eq(Type.meta.predicate(2), false);
+      eq(Type.meta.predicate(3), true);
+    });
+
+    it('should handle maximum', function () {
+      var Type = transform({
+        type: 'integer',
+        maximum: 2
+      });
+      eq(getKind(Type), 'subtype');
+      eq(Type.meta.type, Num);
+      eq(Type.meta.predicate(1), true);
+      eq(Type.meta.predicate(2), true);
+      eq(Type.meta.predicate(3), false);
+    });
+
+    it('should handle exclusiveMaximum', function () {
+      var Type = transform({
+        type: 'integer',
+        maximum: 2,
+        exclusiveMaximum: true
+      });
+      eq(getKind(Type), 'subtype');
+      eq(Type.meta.type, Num);
+      eq(Type.meta.predicate(1), true);
+      eq(Type.meta.predicate(2), false);
+      eq(Type.meta.predicate(3), false);
+    });
+
+  });
+
+  it('should transform a null schema', function () {
     var Type = transform({type: 'null'});
     ok(Type.is(null));
     ko(Type.is(undefined));
     ko(Type.is('a'));
   });
 
-  it('should translate a boolean schema', function () {
+  it('should transform a boolean schema', function () {
     eq(transform({type: 'boolean'}), Bool);
   });
 
   describe('object schema', function () {
 
-    it('should translate a simple schema', function () {
+    it('should transform a simple schema', function () {
       eq(transform({type: 'object'}), Obj);
     });
 
@@ -201,7 +265,7 @@ describe('transform', function () {
 
   describe('array schema', function () {
 
-    it('should translate a simple schema', function () {
+    it('should transform a simple schema', function () {
       eq(transform({type: 'array'}), Arr);
     });
 
