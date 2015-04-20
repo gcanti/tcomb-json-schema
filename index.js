@@ -2,6 +2,7 @@
 
 var t = require('tcomb');
 var fcomb = require('fcomb');
+var util = require('./util');
 
 var Str = t.Str;
 var Num = t.Num;
@@ -12,16 +13,9 @@ var subtype = t.subtype;
 var enums = t.enums;
 
 var SchemaType = enums.of('null string number integer boolean object array', 'SchemaType');
-var Null = t.irreducible('Null', function (x) {
-  return x === null;
-});
 
 function and(f, g) {
   return f ? fcomb.and(f, g) : g;
-}
-
-function isInteger(n) {
-  return n % 1 === 0;
 }
 
 var types = {
@@ -60,13 +54,13 @@ var types = {
         and(predicate, fcomb.lte(s.maximum));
     }
     if (s.hasOwnProperty('integer') && s.integer) {
-      predicate = and(predicate, isInteger);
+      predicate = and(predicate, util.isInteger);
     }
     return predicate ? subtype(Num, predicate) : Num;
   },
 
   integer: function (s) {
-    var predicate = isInteger;
+    var predicate;
     if (s.hasOwnProperty('minimum')) {
       predicate = s.exclusiveMinimum ?
         and(predicate, fcomb.gt(s.minimum)) :
@@ -77,7 +71,7 @@ var types = {
         and(predicate, fcomb.lt(s.maximum)) :
         and(predicate, fcomb.lte(s.maximum));
     }
-    return predicate ? subtype(Num, predicate) : Num;
+    return predicate ? subtype(util.Int, predicate) : util.Int;
   },
 
   boolean: function (s) {
@@ -122,7 +116,7 @@ var types = {
   },
 
   null: function () {
-    return Null;
+    return util.Null;
   }
 
 };

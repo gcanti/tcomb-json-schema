@@ -1,4 +1,4 @@
-Converts a JSON Schema to a [tcomb](https://github.com/gcanti/tcomb) type.
+Transforms a JSON Schema to a type [tcomb](https://github.com/gcanti/tcomb) type.
 
 # API
 
@@ -37,3 +37,7 @@ var TcombType = transform({
 ## resetFormats(): void
 
 Removes all registered formats.
+
+```js
+transform.resetFormats();
+```

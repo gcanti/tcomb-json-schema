@@ -11,11 +11,16 @@
 
 **Note**: Gaps between patch versions are faulty/broken releases.
 
+## v0.1.4
+
+- **Internal**
+  + Optimized `integer` type (@chriskjaer idea)
+
 ## v0.1.3
 
 - **New Feature**
-  + Support format property for string types #6
-  + Support integer type #5
+  + Support format property for string types #6 (@oliger idea)
+  + Support integer type #5 (@chriskjaer idea)
 - **Bug Fix**
   + Removed `t.util.format`
 - **Internal**

@@ -2,6 +2,7 @@
 var assert = require('assert');
 var t = require('tcomb');
 var transform = require('../index');
+var util = require('../util');
 
 var Str = t.Str;
 var Num = t.Num;
@@ -153,10 +154,9 @@ describe('transform', function () {
       var Type = transform({
         type: 'integer'
       });
-      eq(getKind(Type), 'subtype');
-      eq(Type.meta.type, Num);
-      eq(Type.meta.predicate(1), true);
-      eq(Type.meta.predicate(1.1), false);
+      ok(Type === util.Int);
+      eq(Type.is(1), true);
+      eq(Type.is(1.1), false);
     });
 
     it('should handle minimum', function () {
@@ -165,7 +165,7 @@ describe('transform', function () {
         minimum: 2
       });
       eq(getKind(Type), 'subtype');
-      eq(Type.meta.type, Num);
+      eq(Type.meta.type, util.Int);
       eq(Type.meta.predicate(1), false);
       eq(Type.meta.predicate(2), true);
       eq(Type.meta.predicate(3), true);
@@ -178,7 +178,7 @@ describe('transform', function () {
         exclusiveMinimum: true
       });
       eq(getKind(Type), 'subtype');
-      eq(Type.meta.type, Num);
+      eq(Type.meta.type, util.Int);
       eq(Type.meta.predicate(1), false);
       eq(Type.meta.predicate(2), false);
       eq(Type.meta.predicate(3), true);
@@ -190,7 +190,7 @@ describe('transform', function () {
         maximum: 2
       });
       eq(getKind(Type), 'subtype');
-      eq(Type.meta.type, Num);
+      eq(Type.meta.type, util.Int);
       eq(Type.meta.predicate(1), true);
       eq(Type.meta.predicate(2), true);
       eq(Type.meta.predicate(3), false);
@@ -203,7 +203,7 @@ describe('transform', function () {
         exclusiveMaximum: true
       });
       eq(getKind(Type), 'subtype');
-      eq(Type.meta.type, Num);
+      eq(Type.meta.type, util.Int);
       eq(Type.meta.predicate(1), true);
       eq(Type.meta.predicate(2), false);
       eq(Type.meta.predicate(3), false);
@@ -213,6 +213,7 @@ describe('transform', function () {
 
   it('should transform a null schema', function () {
     var Type = transform({type: 'null'});
+    ok(Type === util.Null);
     ok(Type.is(null));
     ko(Type.is(undefined));
     ko(Type.is('a'));
