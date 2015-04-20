@@ -12,6 +12,9 @@ var subtype = t.subtype;
 var enums = t.enums;
 
 var SchemaType = enums.of('null string number boolean object array', 'SchemaType');
+var Null = t.irreducible('Null', function (x) {
+  return x === null;
+});
 
 function and(f, g) {
   return f ? fcomb.and(f, g) : g;
@@ -100,9 +103,7 @@ var types = {
   },
 
   null: function () {
-    return t.irreducible('Null', function (x) {
-      return x === null;
-    });
+    return Null;
   }
 
 };
@@ -121,7 +122,7 @@ function toType(s) {
       return types[type](s);
     }));
   }
-  t.fail(t.util.format('unhandled %j', s));
+  t.fail(t.format('unsupported json schema %j', s));
 }
 
 module.exports = toType;
