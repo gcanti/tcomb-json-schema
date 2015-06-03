@@ -34,7 +34,7 @@ describe('transform', function () {
       eq(transform({type: 'string'}), Str);
     });
 
-    it('should handle enum', function () {
+    it('should handle array enum', function () {
       var Type = transform({
         type: 'string',
         'enum': ["Street", "Avenue", "Boulevard"]
@@ -42,6 +42,22 @@ describe('transform', function () {
       eq(getKind(Type), 'enums');
       eq(Type.is('a'), false);
       eq(Type.is('Street'), true);
+    });
+
+    it('should handle object enum', function () {
+      var Type = transform({
+        type: 'string',
+        'enum': {
+          'street': 'Street',
+          'avenue': 'Avenue',
+          'boulevard': 'Boulevard'
+        }
+      });
+      console.log(Type);
+      eq(getKind(Type), 'enums');
+      eq(Type.is('a'), false);
+      eq(Type.is('street'), true);
+      console.log(Type);
     });
 
     it('should handle minLength', function () {
