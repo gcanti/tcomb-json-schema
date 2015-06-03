@@ -2,7 +2,7 @@ Transforms a JSON Schema to a type [tcomb](https://github.com/gcanti/tcomb) type
 
 # API
 
-## toType(schema: JSONSchema): Type
+## transform(schema: JSONSchema): Type
 
 **Example**
 
