@@ -22,7 +22,15 @@ var types = {
 
   string: function (s) {
     if (s.hasOwnProperty('enum')) {
-      return enums.of(s['enum']);
+      if (Obj.is(s.enum)) {
+        return enums(s.enum);
+      }
+      else if (Arr.is(s.enum)) {
+        return enums.of(s['enum']);
+      }
+      else {
+        throw 'enum should be either an array of values or an object';
+      }
     }
     var predicate;
     if (s.hasOwnProperty('minLength')) {
