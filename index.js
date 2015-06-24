@@ -26,8 +26,7 @@ var types = {
     if (s.hasOwnProperty('pattern')) {
       predicate = and(predicate, fcomb.regexp(new RegExp(s.pattern)));
     }
-    if (s.hasOwnProperty('format')) {
-      t.assert(formats.hasOwnProperty(s.format), '[tcomb-json-schema] Missing format ' + s.format + ', use the (format, predicate) API');
+    if (s.hasOwnProperty('format') && formats.hasOwnProperty(s.format)) {
       predicate = and(predicate, formats[s.format]);
     }
     return predicate ? t.subtype(t.String, predicate) : t.String;
