@@ -11,6 +11,11 @@
 
 **Note**: Gaps between patch versions are faulty/broken releases.
 
+## v0.2.0
+
+- **Breaking Change**
+  + upgrade to tcomb v2.2
+
 ## v0.1.4
 
 - **Internal**
