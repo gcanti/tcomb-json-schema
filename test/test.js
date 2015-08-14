@@ -333,7 +333,7 @@ describe('transform', function () {
           transform.registerFormat('email', isEmail);
         },
         function(err) {
-          if ( (err instanceof Error) && err.message === '[tcomb-json-schema] duplicated format email') {
+          if ( (err instanceof Error) && err.message === '[tcomb] [tcomb-json-schema] Duplicated format email') {
             return true;
           }
         }
@@ -349,7 +349,7 @@ describe('transform', function () {
           });
         },
         function(err) {
-          if ( (err instanceof Error) && err.message === 'missing format unknown, use the `registerFormat` API') {
+          if ( (err instanceof Error) && err.message === '[tcomb] [tcomb-json-schema] Missing format unknown, use the (format, predicate) API') {
             return true;
           }
         }

@@ -4,15 +4,7 @@ var t = require('tcomb');
 var fcomb = require('fcomb');
 var util = require('./util');
 
-var Str = t.Str;
-var Num = t.Num;
-var Bool = t.Bool;
-var Obj = t.Obj;
-var Arr = t.Arr;
-var subtype = t.subtype;
-var enums = t.enums;
-
-var SchemaType = enums.of('null string number integer boolean object array', 'SchemaType');
+var SchemaType = t.enums.of('null string number integer boolean object array', 'SchemaType');
 
 function and(f, g) {
   return f ? fcomb.and(f, g) : g;
@@ -22,7 +14,7 @@ var types = {
 
   string: function (s) {
     if (s.hasOwnProperty('enum')) {
-      return enums.of(s['enum']);
+      return t.enums.of(s['enum']);
     }
     var predicate;
     if (s.hasOwnProperty('minLength')) {
@@ -35,10 +27,10 @@ var types = {
       predicate = and(predicate, fcomb.regexp(new RegExp(s.pattern)));
     }
     if (s.hasOwnProperty('format')) {
-      t.assert(formats.hasOwnProperty(s.format), 'missing format %s, use the `registerFormat` API', s.format);
+      t.assert(formats.hasOwnProperty(s.format), '[tcomb-json-schema] Missing format ' + s.format + ', use the (format, predicate) API');
       predicate = and(predicate, formats[s.format]);
     }
-    return predicate ? subtype(Str, predicate) : Str;
+    return predicate ? t.subtype(t.String, predicate) : t.String;
   },
 
   number: function (s) {
@@ -56,7 +48,7 @@ var types = {
     if (s.hasOwnProperty('integer') && s.integer) {
       predicate = and(predicate, util.isInteger);
     }
-    return predicate ? subtype(Num, predicate) : Num;
+    return predicate ? t.subtype(t.Number, predicate) : t.Number;
   },
 
   integer: function (s) {
@@ -71,11 +63,11 @@ var types = {
         and(predicate, fcomb.lt(s.maximum)) :
         and(predicate, fcomb.lte(s.maximum));
     }
-    return predicate ? subtype(util.Int, predicate) : util.Int;
+    return predicate ? t.subtype(util.Int, predicate) : util.Int;
   },
 
   boolean: function (s) {
-    return Bool;
+    return t.Boolean;
   },
 
   object: function (s) {
@@ -91,16 +83,16 @@ var types = {
       if (s.properties.hasOwnProperty(k)) {
         hasProperties = true;
         var type = transform(s.properties[k]);
-        props[k] = required[k] || type === Bool ? type : t.maybe(type);
+        props[k] = required[k] || type === t.Boolean ? type : t.maybe(type);
       }
     }
-    return hasProperties ? t.struct(props, s.description) : Obj;
+    return hasProperties ? t.struct(props, s.description) : t.Object;
   },
 
   array: function (s) {
     if (s.hasOwnProperty('items')) {
       var items = s.items;
-      if (Obj.is(items)) {
+      if (t.Object.is(items)) {
         return t.list(transform(s.items));
       }
       return t.tuple(items.map(transform));
@@ -112,7 +104,7 @@ var types = {
     if (s.hasOwnProperty('maxItems')) {
       predicate = and(predicate, fcomb.maxLength(s.maxItems));
     }
-    return predicate ? subtype(Arr, predicate) : Arr;
+    return predicate ? t.subtype(t.Array, predicate) : t.Array;
   },
 
   null: function () {
@@ -122,7 +114,7 @@ var types = {
 };
 
 function transform(s) {
-  t.assert(Obj.is(s));
+  t.assert(t.Object.is(s));
   if (!s.hasOwnProperty('type')) {
     return t.Any;
   }
@@ -130,18 +122,18 @@ function transform(s) {
   if (SchemaType.is(type)) {
     return types[type](s);
   }
-  if (Arr.is(type)) {
+  if (t.Array.is(type)) {
     return t.union(type.map(function (type) {
       return types[type](s);
     }));
   }
-  t.fail(t.format('unsupported json schema %j', s));
+  t.fail('[tcomb-json-schema] Unsupported json schema ' + t.stringify(s));
 }
 
 var formats = {};
 
 transform.registerFormat = function registerFormat(format, predicate) {
-  t.assert(!formats.hasOwnProperty(format), '[tcomb-json-schema] duplicated format %s', format);
+  t.assert(!formats.hasOwnProperty(format), '[tcomb-json-schema] Duplicated format ' + format);
   formats[format] = predicate;
 };
 
