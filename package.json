@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/gcanti/tcomb-json-schema",
   "peerDependencies": {
-    "tcomb": "^2.2.0"
+    "tcomb": "^1.0.0"
   },
   "dependencies": {
     "fcomb": "^0.1.0"
