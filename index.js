@@ -130,7 +130,7 @@ function transform(s) {
     }));
   }
 
-  if ( util.doesArrayContain(Object.keys(registerTypes),type)) {
+  if (registerTypes.hasOwnProperty(type)) {
     return registerTypes[type];
   }
   
@@ -150,6 +150,7 @@ transform.resetFormats = function resetFormats() {
 
 transform.registerType= function registerType(typeName, type) {
   t.assert(!registerTypes.hasOwnProperty(typeName), '[tcomb-json-schema] Duplicated type ' + typeName);
+  t.assert(!SchemaType.is(typeName), '[tcomb-json-schema] Reserved type ' + typeName);
   registerTypes[typeName] = type;
 };
 
