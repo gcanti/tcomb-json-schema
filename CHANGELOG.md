@@ -11,6 +11,11 @@
 
 **Note**: Gaps between patch versions are faulty/broken releases.
 
+## v0.2.1
+
+- **New Feature**
+  - Registering a type or structure instead of just a format, fix #13 (thanks @damienleroux)
+
 ## v0.2.0
 
 - **Breaking Change**
