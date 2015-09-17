@@ -370,4 +370,37 @@ describe('transform', function () {
 
   });
 
+	describe('registerType', function () {
+
+	  var Str10 = t.subtype(t.Str, function (s) {
+	    return s.length <= 10;
+	  }, 'Str10');
+
+		transform.registerType('string10', Str10);
+
+    it('should throw if duplicated types are registered', function () {
+      assert.throws(
+        function () {
+          transform.registerType('string10', Str10);
+        },
+        function(err) {
+          if ( (err instanceof Error) && err.message === '[tcomb] [tcomb-json-schema] Duplicated type string10') {
+            return true;
+          }
+        }
+      );
+    });
+
+    it('should handle type property', function () {
+      var Type = transform({
+        type: "string10"
+      });
+      eq(getKind(Type), 'subtype');
+      ok(Type.meta.type === Str);
+      ok(Type.is('abcdefghij'));
+      ko(Type.is('abcdefghijk'))
+    });
+
+  });
+
 });

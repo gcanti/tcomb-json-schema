@@ -41,3 +41,29 @@ Removes all registered formats.
 ```js
 transform.resetFormats();
 ```
+
+## registerType(typeName: string, type: tComb Supported types): void
+
+Registers a new type.
+
+**Example**
+
+```js
+var Str10 = t.subtype(t.Str, function (s) {
+  return s.length <= 10;
+}, 'Str10');
+
+transform.registerType('string10', Str10);
+
+var TcombType = transform({
+  type: "string10"
+});
+```
+
+## resetTypes(): void
+
+Removes all registered types.
+
+```js
+transform.resetTypes();
+```
