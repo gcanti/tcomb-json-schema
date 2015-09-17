@@ -113,6 +113,8 @@ var types = {
 
 };
 
+var registerTypes = {};
+
 function transform(s) {
   t.assert(t.Object.is(s));
   if (!s.hasOwnProperty('type')) {
@@ -127,6 +129,11 @@ function transform(s) {
       return types[type](s);
     }));
   }
+
+  if (registerTypes.hasOwnProperty(type)) {
+    return registerTypes[type];
+  }
+  
   t.fail('[tcomb-json-schema] Unsupported json schema ' + t.stringify(s));
 }
 
@@ -139,6 +146,16 @@ transform.registerFormat = function registerFormat(format, predicate) {
 
 transform.resetFormats = function resetFormats() {
   formats = {};
+};
+
+transform.registerType= function registerType(typeName, type) {
+  t.assert(!registerTypes.hasOwnProperty(typeName), '[tcomb-json-schema] Duplicated type ' + typeName);
+  t.assert(!SchemaType.is(typeName), '[tcomb-json-schema] Reserved type ' + typeName);
+  registerTypes[typeName] = type;
+};
+
+transform.resetTypes = function resetTypes() {
+  registerTypes = {};
 };
 
 module.exports = transform;
