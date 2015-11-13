@@ -1,5 +1,9 @@
 Transforms a JSON Schema to a type [tcomb](https://github.com/gcanti/tcomb) type.
 
+# Playground
+
+If you want to get a general feel for how this works please head over to https://gcanti.github.io/resources/json-schema-to-tcomb/playground/playground.html
+
 # API
 
 ## transform(schema: JSONSchema): Type
