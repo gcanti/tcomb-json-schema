@@ -11,6 +11,11 @@
 
 **Note**: Gaps between patch versions are faulty/broken releases.
 
+## v0.2.2
+
+- **Bug Fix**
+  - IE8 error with 'null' type, fix #17
+
 ## v0.2.1
 
 - **New Feature**

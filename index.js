@@ -107,7 +107,7 @@ var types = {
     return predicate ? t.subtype(t.Array, predicate) : t.Array;
   },
 
-  null: function () {
+  'null': function () {
     return util.Null;
   }
 
@@ -133,7 +133,7 @@ function transform(s) {
   if (registerTypes.hasOwnProperty(type)) {
     return registerTypes[type];
   }
-  
+
   t.fail('[tcomb-json-schema] Unsupported json schema ' + t.stringify(s));
 }
 
