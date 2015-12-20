@@ -286,7 +286,7 @@ describe('transform', function () {
       eq(Type.meta.predicate(['a', 'b', 'c']), false);
     });
 
-    it('should handle items as list', function () {
+    it('should handle list items', function () {
       var Type = transform({
         type: 'array',
         items: {
@@ -297,7 +297,53 @@ describe('transform', function () {
       ok(Type.meta.type === Num);
     });
 
-    it('should handle items as tuple', function () {
+    it('should handle minItems with list items', function () {
+      var Type = transform({
+        "type": "array",
+        "minItems": 2,
+        "items": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            }
+          },
+          "required": ["name"]
+        }
+      })
+      eq(getKind(Type), 'subtype');
+      eq(getKind(Type.meta.type), 'list');
+      eq(getKind(Type.meta.type.meta.type), 'struct');
+      eq(Type.meta.predicate([]), false);
+      eq(Type.meta.predicate([{name: 'name 1'}]), false);
+      eq(Type.meta.predicate([{name: 'name 1'}, {name: 'name 2'}]), true);
+      eq(Type.meta.predicate([{name: 'name 1'}, {name: 'name 2'}, {name: 'name 3'}]), true);
+    })
+
+    it('should handle maxItems with list items', function () {
+      var Type = transform({
+        "type": "array",
+        "maxItems": 2,
+        "items": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            }
+          },
+          "required": ["name"]
+        }
+      })
+      eq(getKind(Type), 'subtype');
+      eq(getKind(Type.meta.type), 'list');
+      eq(getKind(Type.meta.type.meta.type), 'struct');
+      eq(Type.meta.predicate([]), true);
+      eq(Type.meta.predicate([{name: 'name 1'}]), true);
+      eq(Type.meta.predicate([{name: 'name 1'}, {name: 'name 2'}]), true);
+      eq(Type.meta.predicate([{name: 'name 1'}, {name: 'name 2'}, {name: 'name 3'}]), false);
+    })
+
+    it('should handle tuple items', function () {
       var Type = transform({
         type: 'array',
         items: [

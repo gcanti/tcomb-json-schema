@@ -90,12 +90,14 @@ var types = {
   },
 
   array: function (s) {
+    var type = t.Array;
     if (s.hasOwnProperty('items')) {
       var items = s.items;
       if (t.Object.is(items)) {
-        return t.list(transform(s.items));
+        type = t.list(transform(s.items));
+      } else {
+        return t.tuple(items.map(transform));
       }
-      return t.tuple(items.map(transform));
     }
     var predicate;
     if (s.hasOwnProperty('minItems')) {
@@ -104,7 +106,7 @@ var types = {
     if (s.hasOwnProperty('maxItems')) {
       predicate = and(predicate, fcomb.maxLength(s.maxItems));
     }
-    return predicate ? t.subtype(t.Array, predicate) : t.Array;
+    return predicate ? t.subtype(type, predicate) : type;
   },
 
   'null': function () {

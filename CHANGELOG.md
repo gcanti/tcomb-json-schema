@@ -11,6 +11,11 @@
 
 **Note**: Gaps between patch versions are faulty/broken releases.
 
+## v0.2.3
+
+- **Bug Fix**
+  - `minItems` and `maxItems` have no effect for `array`s of objects, fix #18 (thanks @WeweTom)
+
 ## v0.2.2
 
 - **Bug Fix**
