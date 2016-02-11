@@ -71,3 +71,30 @@ Removes all registered types.
 ```js
 transform.resetTypes();
 ```
+
+# JSON Schema
+
+## enums
+
+If you don't care of values you can describe enums as an array:
+
+
+```js
+"street_type": { 
+  "type": "string",
+  "enum": ["Street", "Avenue", "Boulevard"]
+}
+```
+
+or if you want to specify values, describe it as an object where the keys are the values:
+
+```js
+"street_type": { 
+  "type": "string",
+  "enum": {
+    st: "Street", 
+    ave: "Avenue", 
+    blvd: "Boulevard"
+  }
+}
+```

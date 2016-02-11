@@ -44,6 +44,16 @@ describe('transform', function () {
       eq(Type.is('Street'), true);
     });
 
+    it('should handle enum objects', function () {
+      var Type = transform({
+        type: 'string',
+        'enum': {st: "Street", ave: "Avenue", blvd: "Boulevard"}
+      });
+      eq(getKind(Type), 'enums');
+      eq(Type.is('a'), false);
+      eq(Type.is('st'), true);
+    });    
+
     it('should handle minLength', function () {
       var Type = transform({
         type: 'string',
