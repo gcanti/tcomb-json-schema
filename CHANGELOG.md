@@ -11,6 +11,11 @@
 
 **Note**: Gaps between patch versions are faulty/broken releases.
 
+## v0.2.4
+
+- **New Feature**
+  - Added possibility to define enums as objects to carry a value/label pair (thanks @emiloberg)
+
 ## v0.2.3
 
 - **Bug Fix**
