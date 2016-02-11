@@ -14,7 +14,11 @@ var types = {
 
   string: function (s) {
     if (s.hasOwnProperty('enum')) {
-      return t.enums.of(s['enum']);
+      if (t.Array.is(s['enum'])) {
+        return t.enums.of(s['enum']);
+      } else {
+        return t.enums(s['enum']);
+      }
     }
     var predicate;
     if (s.hasOwnProperty('minLength')) {
