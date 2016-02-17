@@ -1,6 +1,6 @@
 {
   "name": "tcomb-json-schema",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "Transforms a JSON Schema to a tcomb type",
   "main": "index.js",
   "files": [
@@ -8,7 +8,8 @@
     "util.js"
   ],
   "scripts": {
-    "test": "mocha"
+    "lint": "eslint index.js",
+    "test": "npm run lint && mocha"
   },
   "repository": {
     "type": "git",
@@ -25,7 +26,8 @@
     "tcomb": "^2.2.0"
   },
   "devDependencies": {
-    "eslint": "^1.1.0"
+    "eslint": "1.10.3",
+    "mocha": "2.4.5"
   },
   "tags": [
     "tcomb",

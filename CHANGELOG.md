@@ -11,6 +11,11 @@
 
 **Note**: Gaps between patch versions are faulty/broken releases.
 
+## v0.2.5
+
+- **New Feature**
+  - Added possibility to define patterns with regex flags (thanks @emiloberg)
+
 ## v0.2.4
 
 - **New Feature**
