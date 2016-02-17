@@ -87,6 +87,17 @@ describe('transform', function () {
       eq(Type.meta.predicate('aaa'), false);
     });
 
+    it('should handle pattern as regex literal', function () {
+      var Type = transform({
+        type: 'string',
+        pattern: '/^H/i'
+      });
+      eq(getKind(Type), 'subtype');
+      eq(Type.meta.type, Str);
+      eq(Type.meta.predicate('hello'), true);
+      eq(Type.meta.predicate('aaa'), false);
+    });    
+
   });
 
   describe('number schema', function () {

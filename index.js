@@ -28,7 +28,12 @@ var types = {
       predicate = and(predicate, fcomb.maxLength(s.maxLength));
     }
     if (s.hasOwnProperty('pattern')) {
-      predicate = and(predicate, fcomb.regexp(new RegExp(s.pattern)));
+      var patternMatch = /^\/(.+)\/([gimuy]*)$/.exec(s.pattern);
+      if (patternMatch === null) {
+        predicate = and(predicate, fcomb.regexp(new RegExp(s.pattern)));
+      } else {
+        predicate = and(predicate, fcomb.regexp(new RegExp(patternMatch[1], patternMatch[2])));
+      }
     }
     if (s.hasOwnProperty('format')) {
       t.assert(formats.hasOwnProperty(s.format), '[tcomb-json-schema] Missing format ' + s.format + ', use the (format, predicate) API');

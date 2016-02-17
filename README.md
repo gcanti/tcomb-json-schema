@@ -74,6 +74,22 @@ transform.resetTypes();
 
 # JSON Schema
 
+## strings
+
+type `string` accepts the property `pattern` which will be used as a predicate (the value of the string must match the [regular expression](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions) defined in `pattern`). Example:
+
+```
+{
+  "type": "string",
+  "pattern": "^abc$"
+}
+```
+
+The pattern may be either
+
+* a simple string with a regex pattern, e.g. `^abc$` (example matching the exact word `abc`), or
+* a string version of a regex literal with a leading and trailing slash and optional [regex flags](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions#Advanced_searching_with_flags) after the last slash, e.g. `/^abc$/i` (example matching `abc` case insensetive)
+
 ## enums
 
 If you don't care of values you can describe enums as an array:
