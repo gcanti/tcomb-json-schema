@@ -75,7 +75,7 @@ var types = {
     return predicate ? t.subtype(util.Int, predicate) : util.Int;
   },
 
-  boolean: function (s) {
+  boolean: function () {
     return t.Boolean;
   },
 
