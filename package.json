@@ -1,6 +1,6 @@
 {
   "name": "tcomb-json-schema",
-  "version": "0.2.5",
+  "version": "0.3.0",
   "description": "Transforms a JSON Schema to a tcomb type",
   "main": "index.js",
   "files": [
@@ -23,7 +23,7 @@
   "homepage": "https://github.com/gcanti/tcomb-json-schema",
   "dependencies": {
     "fcomb": "^0.1.0",
-    "tcomb": "^2.2.0"
+    "tcomb": "^3.0.0"
   },
   "devDependencies": {
     "eslint": "1.10.3",

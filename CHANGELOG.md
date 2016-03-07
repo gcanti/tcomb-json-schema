@@ -11,6 +11,13 @@
 
 **Note**: Gaps between patch versions are faulty/broken releases.
 
+## v0.3.0
+
+**Warning**. If you don't rely in your codebase on the property `maybe(MyType)(undefined) === null` this **is not a breaking change** for you.
+
+- **Breaking Change**
+  - upgrade to `tcomb` v3.0.0
+
 ## v0.2.5
 
 - **New Feature**
