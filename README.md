@@ -1,5 +1,10 @@
 Transforms a JSON Schema to a type [tcomb](https://github.com/gcanti/tcomb) type.
 
+# Compatibility
+
+- tcomb ^2.0.0 -> tcomb-json-schema ^0.2.5
+- tcomb ^3.0.0 -> tcomb-json-schema ^0.3.0
+
 # Playground
 
 If you want to get a general feel for how this works please head over to https://gcanti.github.io/resources/json-schema-to-tcomb/playground/playground.html
@@ -96,7 +101,7 @@ If you don't care of values you can describe enums as an array:
 
 
 ```js
-"street_type": { 
+"street_type": {
   "type": "string",
   "enum": ["Street", "Avenue", "Boulevard"]
 }
@@ -105,11 +110,11 @@ If you don't care of values you can describe enums as an array:
 or if you want to specify values, describe it as an object where the keys are the values:
 
 ```js
-"street_type": { 
+"street_type": {
   "type": "string",
   "enum": {
-    st: "Street", 
-    ave: "Avenue", 
+    st: "Street",
+    ave: "Avenue",
     blvd: "Boulevard"
   }
 }
