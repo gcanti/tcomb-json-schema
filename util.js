@@ -3,7 +3,7 @@
 var t = require('tcomb');
 
 function isInteger(n) {
-  return n % 1 === 0;
+  return typeof n === 'number' && isFinite(n) && Math.floor(n) === n;
 }
 
 var Null = t.irreducible('Null', function (x) { return x === null; });
