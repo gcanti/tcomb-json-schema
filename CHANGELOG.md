@@ -11,6 +11,11 @@
 
 **Note**: Gaps between patch versions are faulty/broken releases.
 
+## v0.3.1
+
+- **Bug fix**
+  - Fix isInteger(null) === true, https://github.com/gcanti/tcomb-json-schema/pull/26 (@sastred)
+
 ## v0.3.0
 
 **Warning**. If you don't rely in your codebase on the property `maybe(MyType)(undefined) === null` this **is not a breaking change** for you.
