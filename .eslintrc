@@ -1,13 +1,12 @@
 {
-  "extends": "eslint:recommended",
+  "extends": ["eslint:recommended", "prettier"],
   "env": {
     "browser": true,
     "node": true
   },
-  "ecmaFeatures": {
-    "modules": true
-  },
+  "plugins": ["prettier"],
   "rules": {
-    "semi": 1
+    "semi": 1,
+    "prettier/prettier": ["error", { "singleQuote": true }]
   }
 }
