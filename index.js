@@ -4,15 +4,17 @@ var t = require('tcomb');
 var fcomb = require('fcomb');
 var util = require('./util');
 
-var SchemaType = t.enums.of('null string number integer boolean object array', 'SchemaType');
+var SchemaType = t.enums.of(
+  'null string number integer boolean object array',
+  'SchemaType'
+);
 
 function and(f, g) {
   return f ? fcomb.and(f, g) : g;
 }
 
 var types = {
-
-  string: function (s) {
+  string: function(s) {
     if (s.hasOwnProperty('enum')) {
       if (t.Array.is(s['enum'])) {
         return t.enums.of(s['enum']);
@@ -32,27 +34,35 @@ var types = {
       if (patternMatch === null) {
         predicate = and(predicate, fcomb.regexp(new RegExp(s.pattern)));
       } else {
-        predicate = and(predicate, fcomb.regexp(new RegExp(patternMatch[1], patternMatch[2])));
+        predicate = and(
+          predicate,
+          fcomb.regexp(new RegExp(patternMatch[1], patternMatch[2]))
+        );
       }
     }
     if (s.hasOwnProperty('format')) {
-      t.assert(formats.hasOwnProperty(s.format), '[tcomb-json-schema] Missing format ' + s.format + ', use the (format, predicate) API');
+      t.assert(
+        formats.hasOwnProperty(s.format),
+        '[tcomb-json-schema] Missing format ' +
+          s.format +
+          ', use the (format, predicate) API'
+      );
       predicate = and(predicate, formats[s.format]);
     }
     return predicate ? t.subtype(t.String, predicate) : t.String;
   },
 
-  number: function (s) {
+  number: function(s) {
     var predicate;
     if (s.hasOwnProperty('minimum')) {
-      predicate = s.exclusiveMinimum ?
-        and(predicate, fcomb.gt(s.minimum)) :
-        and(predicate, fcomb.gte(s.minimum));
+      predicate = s.exclusiveMinimum
+        ? and(predicate, fcomb.gt(s.minimum))
+        : and(predicate, fcomb.gte(s.minimum));
     }
     if (s.hasOwnProperty('maximum')) {
-      predicate = s.exclusiveMaximum ?
-        and(predicate, fcomb.lt(s.maximum)) :
-        and(predicate, fcomb.lte(s.maximum));
+      predicate = s.exclusiveMaximum
+        ? and(predicate, fcomb.lt(s.maximum))
+        : and(predicate, fcomb.lte(s.maximum));
     }
     if (s.hasOwnProperty('integer') && s.integer) {
       predicate = and(predicate, util.isInteger);
@@ -60,31 +70,31 @@ var types = {
     return predicate ? t.subtype(t.Number, predicate) : t.Number;
   },
 
-  integer: function (s) {
+  integer: function(s) {
     var predicate;
     if (s.hasOwnProperty('minimum')) {
-      predicate = s.exclusiveMinimum ?
-        and(predicate, fcomb.gt(s.minimum)) :
-        and(predicate, fcomb.gte(s.minimum));
+      predicate = s.exclusiveMinimum
+        ? and(predicate, fcomb.gt(s.minimum))
+        : and(predicate, fcomb.gte(s.minimum));
     }
     if (s.hasOwnProperty('maximum')) {
-      predicate = s.exclusiveMaximum ?
-        and(predicate, fcomb.lt(s.maximum)) :
-        and(predicate, fcomb.lte(s.maximum));
+      predicate = s.exclusiveMaximum
+        ? and(predicate, fcomb.lt(s.maximum))
+        : and(predicate, fcomb.lte(s.maximum));
     }
     return predicate ? t.subtype(util.Int, predicate) : util.Int;
   },
 
-  boolean: function () {
+  boolean: function() {
     return t.Boolean;
   },
 
-  object: function (s) {
+  object: function(s) {
     var props = {};
     var hasProperties = false;
     var required = {};
     if (s.required) {
-      s.required.forEach(function (k) {
+      s.required.forEach(function(k) {
         required[k] = true;
       });
     }
@@ -98,7 +108,7 @@ var types = {
     return hasProperties ? t.struct(props, s.description) : t.Object;
   },
 
-  array: function (s) {
+  array: function(s) {
     var type = t.Array;
     if (s.hasOwnProperty('items')) {
       var items = s.items;
@@ -118,10 +128,9 @@ var types = {
     return predicate ? t.subtype(type, predicate) : type;
   },
 
-  'null': function () {
+  null: function() {
     return util.Null;
   }
-
 };
 
 var registerTypes = {};
@@ -136,9 +145,11 @@ function transform(s) {
     return types[type](s);
   }
   if (t.Array.is(type)) {
-    return t.union(type.map(function (type) {
-      return types[type](s);
-    }));
+    return t.union(
+      type.map(function(type) {
+        return types[type](s);
+      })
+    );
   }
 
   if (registerTypes.hasOwnProperty(type)) {
@@ -151,7 +162,10 @@ function transform(s) {
 var formats = {};
 
 transform.registerFormat = function registerFormat(format, predicate) {
-  t.assert(!formats.hasOwnProperty(format), '[tcomb-json-schema] Duplicated format ' + format);
+  t.assert(
+    !formats.hasOwnProperty(format),
+    '[tcomb-json-schema] Duplicated format ' + format
+  );
   formats[format] = predicate;
 };
 
@@ -159,9 +173,15 @@ transform.resetFormats = function resetFormats() {
   formats = {};
 };
 
-transform.registerType= function registerType(typeName, type) {
-  t.assert(!registerTypes.hasOwnProperty(typeName), '[tcomb-json-schema] Duplicated type ' + typeName);
-  t.assert(!SchemaType.is(typeName), '[tcomb-json-schema] Reserved type ' + typeName);
+transform.registerType = function registerType(typeName, type) {
+  t.assert(
+    !registerTypes.hasOwnProperty(typeName),
+    '[tcomb-json-schema] Duplicated type ' + typeName
+  );
+  t.assert(
+    !SchemaType.is(typeName),
+    '[tcomb-json-schema] Reserved type ' + typeName
+  );
   registerTypes[typeName] = type;
 };
 

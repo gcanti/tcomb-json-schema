@@ -8,6 +8,8 @@
     "modules": true
   },
   "rules": {
-    "semi": 1
-  }
+    "semi": 1,
+    "prettier/prettier": "error"
+  },
+  "plugins": ["prettier"]
 }

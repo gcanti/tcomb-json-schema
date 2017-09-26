@@ -3,13 +3,12 @@
   "version": "0.3.1",
   "description": "Transforms a JSON Schema to a tcomb type",
   "main": "index.js",
-  "files": [
-    "index.js",
-    "util.js"
-  ],
+  "files": ["index.js", "util.js"],
   "scripts": {
     "lint": "eslint index.js",
-    "test": "npm run lint && mocha"
+    "test": "npm run lint && mocha",
+    "prettier":
+      "prettier --single-quote --print-width 81 --write index.js util.js"
   },
   "repository": {
     "type": "git",
@@ -26,15 +25,14 @@
     "tcomb": "^3.0.0"
   },
   "devDependencies": {
+    "@types/eslint-plugin-prettier": "^2.2.0",
+    "@types/prettier": "^1.7.0",
     "eslint": "1.10.3",
-    "mocha": "2.4.5"
+    "eslint-config-prettier": "^2.6.0",
+    "eslint-plugin-prettier": "^2.3.1",
+    "mocha": "2.4.5",
+    "prettier": "^1.7.0"
   },
-  "tags": [
-    "tcomb",
-    "JSON Schema"
-  ],
-  "keywords": [
-    "tcomb",
-    "JSON Schema"
-  ]
+  "tags": ["tcomb", "JSON Schema"],
+  "keywords": ["tcomb", "JSON Schema"]
 }
