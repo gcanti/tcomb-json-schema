@@ -15,6 +15,7 @@ function and(f, g) {
 
 var types = {
   string: function(s) {
+    var type = t.String;
     if (s.hasOwnProperty('enum')) {
       if (t.Array.is(s['enum'])) {
         return t.enums.of(s['enum']);
@@ -48,8 +49,15 @@ var types = {
           ', use the (format, predicate) API'
       );
       predicate = and(predicate, formats[s.format]);
+      if (
+        s.format === 'date' ||
+        s.format === 'date-time' ||
+        s.format === 'time'
+      ) {
+        type = t.Date;
+      }
     }
-    return predicate ? t.subtype(t.String, predicate) : t.String;
+    return predicate ? t.subtype(type, predicate) : type;
   },
 
   number: function(s) {
