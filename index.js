@@ -15,7 +15,6 @@ function and(f, g) {
 
 var types = {
   string: function(s) {
-    var type = t.String;
     if (s.hasOwnProperty('enum')) {
       if (t.Array.is(s['enum'])) {
         return t.enums.of(s['enum']);
@@ -48,16 +47,12 @@ var types = {
           s.format +
           ', use the (format, predicate) API'
       );
-      predicate = and(predicate, formats[s.format]);
-      if (
-        s.format === 'date' ||
-        s.format === 'date-time' ||
-        s.format === 'time'
-      ) {
-        type = t.Date;
+      if (t.isType(formats[s.format])) {
+        return formats[s.format];
       }
+      predicate = and(predicate, formats[s.format]);
     }
-    return predicate ? t.subtype(type, predicate) : type;
+    return predicate ? t.subtype(t.String, predicate) : t.String;
   },
 
   number: function(s) {
@@ -169,12 +164,12 @@ function transform(s) {
 
 var formats = {};
 
-transform.registerFormat = function registerFormat(format, predicate) {
+transform.registerFormat = function registerFormat(format, predicateOrType) {
   t.assert(
     !formats.hasOwnProperty(format),
     '[tcomb-json-schema] Duplicated format ' + format
   );
-  formats[format] = predicate;
+  formats[format] = predicateOrType;
 };
 
 transform.resetFormats = function resetFormats() {

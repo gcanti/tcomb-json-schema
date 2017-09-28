@@ -450,16 +450,12 @@ describe('transform', function() {
   });
 
   describe('date format', function() {
-    function isDate(x) {
-      return x instanceof Date;
-    }
-
-    transform.registerFormat('date', isDate);
+    transform.registerFormat('date', Dat);
 
     it('should throw if duplicated formats are registered', function() {
       assert.throws(
         function() {
-          transform.registerFormat('date', isDate);
+          transform.registerFormat('date', Dat);
         },
         function(err) {
           if (
@@ -479,9 +475,8 @@ describe('transform', function() {
         default: '',
         description: 'Date of your departure'
       });
-      eq(getKind(Type), 'subtype');
-      ok(Type.meta.type === Dat);
-      ok(Type.meta.predicate === isDate);
+      eq(getKind(Type), 'irreducible');
+      ok(Type === Dat);
       ok(Type.is(new Date('2000-10-23')));
       ko(Type.is('2000.10.23'));
     });
