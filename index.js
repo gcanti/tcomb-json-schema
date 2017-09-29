@@ -47,6 +47,9 @@ var types = {
           s.format +
           ', use the (format, predicate) API'
       );
+      if (t.isType(formats[s.format])) {
+        return formats[s.format];
+      }
       predicate = and(predicate, formats[s.format]);
     }
     return predicate ? t.subtype(t.String, predicate) : t.String;
@@ -161,12 +164,12 @@ function transform(s) {
 
 var formats = {};
 
-transform.registerFormat = function registerFormat(format, predicate) {
+transform.registerFormat = function registerFormat(format, predicateOrType) {
   t.assert(
     !formats.hasOwnProperty(format),
     '[tcomb-json-schema] Duplicated format ' + format
   );
-  formats[format] = predicate;
+  formats[format] = predicateOrType;
 };
 
 transform.resetFormats = function resetFormats() {
