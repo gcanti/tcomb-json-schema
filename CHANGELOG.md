@@ -11,6 +11,11 @@
 
 **Note**: Gaps between patch versions are faulty/broken releases.
 
+## v0.3.2
+
+- **New Feature**
+  - `registerFormat` can now accept a tcomb type other than a predicate, closes #29 (@alvaromb)
+
 ## v0.3.1
 
 - **Bug fix**

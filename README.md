@@ -24,7 +24,7 @@ var TcombType = transform({
 });
 ```
 
-## registerFormat(format: string, predicate: (x: any) => boolean): void
+## registerFormat(format: string, predicateOrType: (x: any) => boolean | Type): void
 
 Registers a new format.
 
