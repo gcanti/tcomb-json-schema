@@ -15,6 +15,23 @@ function and(f, g) {
 
 var types = {
   string: function(s) {
+    var predicate, formatPredicate;
+
+    if (s.hasOwnProperty('format')) {
+      t.assert(
+        formats.hasOwnProperty(s.format),
+        '[tcomb-json-schema] Missing format ' +
+          s.format +
+          ', use the (format, predicate) API'
+      );
+
+      if (t.isType(formats[s.format])) {
+        return formats[s.format];
+      }
+
+      formatPredicate = formats[s.format];
+    }
+
     if (s.hasOwnProperty('enum')) {
       if (t.Array.is(s['enum'])) {
         return t.enums.of(s['enum']);
@@ -22,7 +39,7 @@ var types = {
         return t.enums(s['enum']);
       }
     }
-    var predicate;
+
     if (s.hasOwnProperty('minLength')) {
       predicate = and(predicate, fcomb.minLength(s.minLength));
     }
@@ -40,18 +57,11 @@ var types = {
         );
       }
     }
-    if (s.hasOwnProperty('format')) {
-      t.assert(
-        formats.hasOwnProperty(s.format),
-        '[tcomb-json-schema] Missing format ' +
-          s.format +
-          ', use the (format, predicate) API'
-      );
-      if (t.isType(formats[s.format])) {
-        return formats[s.format];
-      }
-      predicate = and(predicate, formats[s.format]);
+
+    if (formatPredicate) {
+      predicate = and(predicate, formatPredicate);
     }
+
     return predicate ? t.subtype(t.String, predicate) : t.String;
   },
 
