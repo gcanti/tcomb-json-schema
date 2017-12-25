@@ -26,7 +26,7 @@ var TcombType = transform({
 
 ## registerFormat(format: string, predicateOrType: (x: any) => boolean | Type): void
 
-Registers a new format.
+Registers a new format for string types. If you're using any format in the json-schema you need to register it before the transformation.
 
 **Example**
 
