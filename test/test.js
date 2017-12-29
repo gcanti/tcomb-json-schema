@@ -447,6 +447,24 @@ describe('transform', function() {
       ok(Type.is('a@b'));
       ko(Type.is(''));
     });
+
+    it('should favour format types over any other type', function() {
+      var TestNumType = t.subtype(Num, function(val) {
+        return Boolean(~[2, 3].indexOf(val));
+      });
+
+      transform.registerFormat('number-type', TestNumType);
+
+      var Type = transform({
+        type: 'string',
+        format: 'number-type',
+        enum: [1, 2]
+      });
+      eq(getKind(Type), 'subtype');
+      ok(Type.meta.type === Num);
+      ok(Type.is(2));
+      ko(Type.is(1));
+    });
   });
 
   describe('date format', function() {
