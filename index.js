@@ -98,6 +98,9 @@ var types = {
     var required = {};
     if (s.required) {
       s.required.forEach(function(k) {
+        if (!s.properties.hasOwnProperty(k)) {
+          t.fail('[tcomb-json-schema] Missing required property ' + k);
+        }
         required[k] = true;
       });
     }
